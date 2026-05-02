@@ -1,26 +1,39 @@
 #include "main.h"
 
 /**
- * print_str - prints a string
- * @args: va_list of arguments
- * @f: pointer to flags
- * Return: number of characters printed
+ * print_str - prints a string with padding
+ * @args: va_list
+ * @f: pointer to flags struct
+ * @w: width
+ * Return: number of chars printed
  */
-int print_str(va_list args, flags_t *f)
+int print_str(va_list args, flags_t *f, int w)
 {
 	char *str = va_arg(args, char *);
-	int i = 0;
+	int i = 0, len = 0, pad;
 
 	if (str == NULL)
 		str = "(null)";
 
-	/* If minus flag is 1, logic for left-justification goes here */
-	/* For now, we simply print the string to maintain basic flow */
-	while (str[i])
+	while (str[len])
+		len++;
+
+	pad = (w > len) ? (w - len) : 0;
+
+	if (f->minus == 0) /* Pad before if no minus flag */
 	{
-		_putchar(str[i]);
-		i++;
+		for (i = 0; i < pad; i++)
+			_putchar(' ');
 	}
 
-	return (i);
+	for (i = 0; str[i]; i++)
+		_putchar(str[i]);
+
+	if (f->minus == 1) /* Pad after if minus flag exists */
+	{
+		for (i = 0; i < pad; i++)
+			_putchar(' ');
+	}
+
+	return (len > w ? len : w);
 }
