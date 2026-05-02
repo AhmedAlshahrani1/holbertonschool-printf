@@ -20,7 +20,6 @@ int _putchar(char c);
 int get_flags(char s, flags_t *f);
 int print_number(va_list args, flags_t *f, int w);
 int print_str(va_list args, flags_t *f, int w);
-int print_number(int n); 
 int print_unsigned(va_list args, flags_t *f, int w);
 int print_octal(va_list args, flags_t *f, int w);
 int print_hex(va_list args, flags_t *f, int w);

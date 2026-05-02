@@ -1,62 +1,41 @@
 #include "main.h"
 
 /**
- * print_number - prints a signed integer with width and flags support
- * @args: va_list of arguments
- * @f: pointer to flags struct
- * @w: field width
- * Return: number of characters printed
+ * print_number - prints a signed integer with width and flags
  */
 int print_number(va_list args, flags_t *f, int w)
 {
 	long int n = va_arg(args, int);
 	long int tmp = n;
 	int len = 0, i, pad;
-	char buf[20];
+	char buf[24];
 
-	if (n < 0)
-	{
+	if (n < 0) {
 		len++;
 		tmp = -tmp;
 	}
-	if (tmp == 0)
-		buf[len++] = '0';
-	while (tmp > 0)
-	{
+	if (tmp == 0) buf[len++] = '0';
+	while (tmp > 0) {
 		buf[len++] = (tmp % 10) + '0';
 		tmp /= 10;
 	}
 	
 	pad = (w > len) ? (w - len) : 0;
 
-	/* Right-justified padding (minus flag not set) */
 	if (f->minus == 0)
-		for (i = 0; i < pad; i++)
-			_putchar(' ');
+		for (i = 0; i < pad; i++) _putchar(' ');
 
-	if (n < 0)
-		_putchar('-');
+	if (n < 0) _putchar('-');
+	for (i = len - 1; i >= (n < 0 ? 1 : 0); i--) _putchar(buf[i]);
 
-	/* Print digits from buffer in reverse */
-	for (i = len - 1; i >= (n < 0 ? 1 : 0); i--)
-		_putchar(buf[i]);
-
-	/* Left-justified padding (minus flag is set) */
 	if (f->minus == 1)
-		for (i = 0; i < pad; i++)
-			_putchar(' ');
+		for (i = 0; i < pad; i++) _putchar(' ');
 
 	return (len > w ? len : w);
 }
 
 /**
- * print_base - helper for unsigned, octal, and hex with width/flags
- * @n: number to print
- * @base: base to convert to
- * @uppercase: 1 for upper hex, 0 for lower
- * @f: flags
- * @w: width
- * Return: number of characters printed
+ * print_base - helper for unsigned, octal, and hex
  */
 int print_base(unsigned int n, int base, int uppercase, flags_t *f, int w)
 {
@@ -64,10 +43,8 @@ int print_base(unsigned int n, int base, int uppercase, flags_t *f, int w)
 	char buf[64];
 	int len = 0, i, pad;
 
-	if (n == 0)
-		buf[len++] = '0';
-	while (n > 0)
-	{
+	if (n == 0) buf[len++] = '0';
+	while (n > 0) {
 		buf[len++] = set[n % base];
 		n /= base;
 	}
@@ -75,20 +52,15 @@ int print_base(unsigned int n, int base, int uppercase, flags_t *f, int w)
 	pad = (w > len) ? (w - len) : 0;
 
 	if (f->minus == 0)
-		for (i = 0; i < pad; i++)
-			_putchar(' ');
-
-	for (i = len - 1; i >= 0; i--)
-		_putchar(buf[i]);
-
+		for (i = 0; i < pad; i++) _putchar(' ');
+	for (i = len - 1; i >= 0; i--) _putchar(buf[i]);
 	if (f->minus == 1)
-		for (i = 0; i < pad; i++)
-			_putchar(' ');
+		for (i = 0; i < pad; i++) _putchar(' ');
 
 	return (len > w ? len : w);
 }
 
-/* Specific wrappers for unsigned types */
+/* Wrappers */
 int print_unsigned(va_list args, flags_t *f, int w) 
 { return (print_base(va_arg(args, unsigned int), 10, 0, f, w)); }
 
@@ -103,8 +75,6 @@ int print_HEX(va_list args, flags_t *f, int w)
 
 /**
  * _printf - produces output according to a format
- * @format: character string
- * Return: number of characters printed
  */
 int _printf(const char *format, ...)
 {
@@ -127,8 +97,7 @@ int _printf(const char *format, ...)
 			i++;
 			flags.minus = 0;
 			width = 0;
-			while (get_flags(format[i], &flags))
-				i++;
+			while (get_flags(format[i], &flags)) i++;
 			while (format[i] >= '0' && format[i] <= '9')
 				width = (width * 10) + (format[i++] - '0');
 			
